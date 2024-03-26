@@ -26,6 +26,7 @@ jobs:
           ansible-playbook playbook.yaml
 
   build-and-push:
+    needs: [ansible-playbook]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
