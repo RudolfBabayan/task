@@ -1,0 +1,50 @@
+name: task1
+env:
+  Image_tag: ${{ github.run_number }}
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  IMAGE_TAG: ${{ github.run_number }}
+
+jobs:
+
+
+  ansible-playbook:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: add keyscan
+      run: |
+        ssh-keyscan 16.170.245.189 >> ~/.ssh/known_hosts
+
+    - name: Ansible playbook run
+      run: |
+        ansible-playbook  playbook.yaml
+
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker images
+        run: |
+          cd task
+          docker-compose build
+          docker-compose push
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}

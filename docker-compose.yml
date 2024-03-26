@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: php-fpm
+    image: rudolfbabayan/php-fpm:${IMAGE_TAG}  # Use the environment variable here
     volumes:
       - ./app:/var/www/html
     depends_on:
@@ -13,7 +13,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx
+    image: rudolfbabayan/nginx:${IMAGE_TAG}  # Use the environment variable here
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
@@ -26,7 +26,7 @@ services:
       - mysql-db
 
   mysql-db:
-    image: mysql:8.0
+    image: rudolfbabayan/mysql:${IMAGE_TAG}  # Use the environment variable here
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: test_database
@@ -36,7 +36,7 @@ services:
       - "3306:3306"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: rudolfbabayan/phpmyadmin:${IMAGE_TAG}  # Use the environment variable here
     links:
       - mysql-db
     ports:
